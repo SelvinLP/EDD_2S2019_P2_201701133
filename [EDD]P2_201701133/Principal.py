@@ -5,18 +5,20 @@ import curses
 from curses import KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN
 import subprocess
 import os
+from ListaDoble_Block import  ListaDoblementeEnlazada_Block
 
 
 
 #Metodos de Curses
 stdscr = curses.initscr()
 TamañoTablero_y=20
-TamañoTablero_x=50
+TamañoTablero_x=70
 window = curses.newwin(TamañoTablero_y,TamañoTablero_x,0,0)
 window.keypad(True)
 curses.noecho()
 curses.curs_set(0)
 window.nodelay(True)
+
 
 #variables del menu
 opcion =0
@@ -42,6 +44,7 @@ def Pintado_Titulo(Vent,cadena):
     Vent.addstr(0,posicion_x,cadena)
 
 #Muestra Pantalla
+ListaBlockes=ListaDoblementeEnlazada_Block()
 Pintado_Menu(window)
 while opcion==0:
     #obtenemos posicion del menu
