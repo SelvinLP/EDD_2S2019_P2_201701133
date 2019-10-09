@@ -8,11 +8,12 @@ class Block():
         self.anterior = None
         self.siguiente = None
         self.INDEX=index
-        self.TIMESTAMP
-        self.NAMECLASS=NombreClase
-        #arbol
-        #Hash
-        #previusHash
+        self.TIMESTAMP=""
+        self.CLASS=NombreClase
+        self.PREVIOUSHASH=""
+        self.HASH=""
+        self.DATA=""
+
 
 class ListaDoblementeEnlazada_Block():
 
@@ -39,9 +40,43 @@ class ListaDoblementeEnlazada_Block():
             self.ultimo.anterior=aux
             self.size += 1
 
+    def Mostrar(self):
+        tem=self.primero
+        while tem is not None:
+            print(tem.CLASS)
+            tem=tem.siguiente
+
     def Eliminar(self):
         aux=self.ultimo.anterior
         self.ultimo.anterior = None
         self.ultimo=aux
         self.ultimo.siguiente=None
         self.size-=1
+
+    def Graficar(self):
+        CadenaImprimir="digraph List { rankdir=TB "+'\n'
+        CadenaImprimir=CadenaImprimir+' size="9,9"'+'\n'
+        CadenaImprimir = CadenaImprimir + 'node[shape=record,style=filled] ' + '\n'
+        CadenaImprimir=CadenaImprimir+'"NULL"'+" [shape=box] "+ '\n'
+        CadenaImprimir = CadenaImprimir + '"NULL."' + " [shape=box] "+ '\n'
+        aux = self.primero
+
+        #ciclo para los enlaces siguientes
+
+        while aux is not None:
+            CadenaImprimir = CadenaImprimir + " " + '"(' +aux.CLASS+ ')"' +'[label ='+'"{'
+            CadenaImprimir= CadenaImprimir+'|'+ '( CLASS='+aux.CLASS+" TIMESTAMP= "+aux.TIMESTAMP+" PREHASH="+aux.PREVIOUSHASH+" HASH="+aux.HASH+')' +'| }"]'+ '\n'
+            if aux.siguiente is None:
+                CadenaSig=CadenaSig+" "+ '"(' +aux.CLASS+ ')"'
+            else:
+                CadenaSig=CadenaSig+" "+ '"(' +aux.CLASS+ ')"' +" -> "
+
+            aux = aux.siguiente
+
+        CadenaSig=CadenaSig+' -> '+'"NULL"'
+        CadenaImprimir = CadenaImprimir+" "+CadenaSig++"}"
+        file = open("ListaDobleBlock.dot", "w")
+        file.write(CadenaImprimir)
+        file.close()
+        os.system('dot -Tpng ListaDobleBlock.dot -o  ListaDobleBlock.png')
+        os.system('Start ListaDobleBlock.png')
