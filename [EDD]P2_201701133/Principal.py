@@ -1,6 +1,5 @@
 #Librerias
 #para instalar curses python -m pip install windows-curses
-import csv
 import curses
 from curses import KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN
 import subprocess
@@ -66,32 +65,30 @@ while opcion==0:
             nombrecorrecto=window.getch()
             if(nombrecorrecto==49):
                 #iterador para datos
-                NombreDatos=0
-                Nombreclass=0
+                CadenaImprimir=""
+                CambioCarga=0
                 #NOTA:Colocar extension
                 f = open(nombre)
-                with open(nombre, newline='') as File:
-                    reader = csv.reader(File, delimiter=',')
-                    for linea in reader:
-                        #validacion de la primera fila
-                        if (Nombreclass == 1):
-                            NombreEnvio = linea
-                            Nombreclass = 2
-                        elif(linea=="class"or linea=="CLASS"):
-                            datos=0
-                            CadenaEnvio = ""
-                            Nombreclass=1
+                for linea in f:
+                    Dato=linea.split(",")
+                    if(Dato[0]=="Class" or Dato[0]=="CLASS" or Dato[0]=="class" ):
+                        CambioCarga = 1
+                    if (Dato[0] == "Data" or Dato[0] == "DATA" or Dato[0] == "data"):
+                        CambioCarga = 2
+                    if(CambioCarga==1):
+                        NombreEnvio=Dato[1]
+                    if(CambioCarga==2):
+                        for i in range(len(Dato)):
+                            if(Dato[0]!=Dato[i]):
+                                CadenaEnvio+=Dato[i]
+                                CadenaImprimir+=Dato[i]
 
+                file = open("L.txt", "w")
+                file.write(CadenaImprimir)
+                file.close()
 
-                        #validacion de la segunda fila
-                        if(NombreDatos==1):
-                            CadenaEnvio +=linea
-                        elif(linea=="data" or linea=="DATA"):
-                            NombreDatos=1
-
-                        window.addstr(7, 19, str(linea))
                 #insertamos el valor en la lista
-                ListaBlockes.Insertar_Final(NombreEnvio)
+                ListaBlockes.Insertar_Final(NombreEnvio,CadenaEnvio)
 
 
             elif(nombrecorrecto==50):
@@ -100,10 +97,30 @@ while opcion==0:
 
         window.addstr(12, 21, 'Presione DELETE para salir')
 
-        #fin de abrir archivo5
+        #fin de abrir archivo
         Espera_Salir(window)
         Pintado_Menu(window)
         opcion=0
+
+    elif(opcion==51):#opcion 3
+        Pintado_Titulo(window, ' REPORTS ')
+        window.addstr(7, 21, '1. BLOCKCHAIN ')  # 49
+        window.addstr(8, 21, '2. TREE REPORT')  # 50
+        window.addstr(12, 21, 'Presione DELETE para salir')
+        opcionreporte=window.getch()
+        if(opcionreporte==49):
+            ListaBlockes.Graficar()
+        #opcion de de reporte
+        if(opcionreporte==50):
+            Pintado_Titulo(window, ' TREE REPORTS ')
+            window.addstr(7, 21, '1. TREE ')  # 49
+            window.addstr(8, 21, '2. RECORRIDOS')  # 50
+            window.addstr(12, 21, 'Presione DELETE para salir')
+        # fin de abrir archivo5
+        Espera_Salir(window)
+        Pintado_Menu(window)
+        opcion = 0
+
     elif (opcion==52):
         #opcion 4 Salir
         opcion = 100

@@ -1,0 +1,21 @@
+digraph List { 
+rankdir=TB
+size="9,9"
+node[shape=record,style=filled] 
+"NULL" [shape=box] 
+"NULL." [shape=box] 
+ "(Estructura de Datos
+)"[label ="{| CLASS=Estructura de Datos
+\n TIMESTAMP= 9-10-2019::23:20:37\n PREHASH=0000\n HASH=1d6bbb9d05e4ca83da179dbfaef374736a71ce32919d8675277b553af2c9cef2| }"]
+ "(Compiladores
+)"[label ="{| CLASS=Compiladores
+\n TIMESTAMP= 9-10-2019::23:20:43\n PREHASH=1d6bbb9d05e4ca83da179dbfaef374736a71ce32919d8675277b553af2c9cef2\n HASH=530bf1b927bb3c9de54fadfc5a057eff50cae275cb419a8d9f74afd898b8b7df| }"]
+
+"NULL." ->  "(Estructura de Datos
+)" ->  "(Compiladores
+)" -> "NULL"
+ "(Estructura de Datos
+)" ->  "(Compiladores
+)"[dir=back]
+
+}
