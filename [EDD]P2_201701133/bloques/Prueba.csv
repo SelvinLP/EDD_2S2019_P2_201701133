@@ -1,4 +1,5 @@
-{
+class,Estructuras de datos
+data,"{
     ""value"":""201403525-Nery"",
     ""left"":{
         ""value"":""201005874-Andres"",
@@ -26,5 +27,5 @@
             ""right"":null
         }
     }
-}
+}"
 

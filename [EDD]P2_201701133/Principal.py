@@ -1,4 +1,5 @@
 #Librerias
+
 #para instalar curses python -m pip install windows-curses
 import curses
 from curses import KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN
@@ -65,30 +66,31 @@ while opcion==0:
             nombrecorrecto=window.getch()
             if(nombrecorrecto==49):
                 #iterador para datos
-                CadenaImprimir=""
                 CambioCarga=0
                 #NOTA:Colocar extension
                 f = open(nombre)
                 for linea in f:
                     Dato=linea.split(",")
+                    if (CambioCarga == 2):
+                        CadenaEnvio+=linea
+
                     if(Dato[0]=="Class" or Dato[0]=="CLASS" or Dato[0]=="class" ):
                         CambioCarga = 1
                     if (Dato[0] == "Data" or Dato[0] == "DATA" or Dato[0] == "data"):
                         CambioCarga = 2
+                        CadenaEnvio+=Dato[1]
                     if(CambioCarga==1):
                         NombreEnvio=Dato[1]
-                    if(CambioCarga==2):
-                        for i in range(len(Dato)):
-                            if(Dato[0]!=Dato[i]):
-                                CadenaEnvio+=Dato[i]
-                                CadenaImprimir+=Dato[i]
 
-                file = open("L.txt", "w")
-                file.write(CadenaImprimir)
-                file.close()
+
+
 
                 #insertamos el valor en la lista
-                ListaBlockes.Insertar_Final(NombreEnvio,CadenaEnvio)
+
+                file = open("L.txt", "w")
+                file.write(CadenaEnvio.lstrip("{" ).replace('"{','{').replace('}"','}'))
+                file.close()
+                ListaBlockes.Insertar_Final(NombreEnvio,CadenaEnvio.replace('""','"').replace('""','"').lstrip("{" ).replace('"{','{').replace('}"','}'))
 
 
             elif(nombrecorrecto==50):

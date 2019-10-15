@@ -1,10 +1,11 @@
-import subprocess
+
 import os
 import hashlib
+import json
 
 from datetime import datetime
 
-from ArbolAVL import ArbolAVL_B
+#from ArbolAVL import ArbolAVL_B
 
 class Block():
     def __init__(self,index,NombreClase,tiempo,PreHash,hash):
@@ -37,12 +38,19 @@ class ListaDoblementeEnlazada_Block():
             hashlib.sha256(cadena.encode()).hexdigest()
         return Confidencial
 
+    def LiberarJSON(self,data):
+        inf=json.loads(data)
+        file = open("J.txt", "w")
+        file.write(inf["value"])
+        file.close()
+
     def Insertar_Final(self, NombreClas,DATA):
         #obtenemos la timestamp
         now = datetime.now()
         Hora = str(now.day) + '-' + str(now.month) + '-' + str(now.year) +'::'+ str(now.hour) + ':' + str(now.minute) + ':' + str(now.second)
 
-
+        #para arbol
+        self.LiberarJSON(DATA)
         if self.vacio():
             # obtenemos el hash
             EnviarCadena = str(self.size) + Hora + NombreClas + DATA + "0000"
@@ -70,12 +78,6 @@ class ListaDoblementeEnlazada_Block():
             print(tem.CLASS)
             tem=tem.siguiente
 
-    def Eliminar(self):
-        aux=self.ultimo.anterior
-        self.ultimo.anterior = None
-        self.ultimo=aux
-        self.ultimo.siguiente=None
-        self.size-=1
 
     def Graficar(self):
         CadenaSig=""
