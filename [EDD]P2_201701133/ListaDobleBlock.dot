@@ -5,12 +5,17 @@ node[shape=record,style=filled]
 "NULL" [shape=box] 
 "NULL." [shape=box] 
  "(Estructuras de datos
-)"[label ="{| CLASS=Estructuras de datos
-\n TIMESTAMP= 12-10-2019::23:35:57\n PREHASH=0000\n HASH=279043babacffefded3640ede33479bafa7e773311bc9540576c5df7c36dbaf1| }"]
+)"[label ="{| INDEX= 0\n CLASS=Estructuras de datos
+\n TIMESTAMP= 16-10-2019::22:57:38\n PREHASH=0000\n HASH=3d3fa18839694015eb43c4fb528f81f0e28682aedcdfca970339f9537495433e| }"]
+ "(Compi
+)"[label ="{| INDEX= 1\n CLASS=Compi
+\n TIMESTAMP= 16-10-2019::22:57:56\n PREHASH=3d3fa18839694015eb43c4fb528f81f0e28682aedcdfca970339f9537495433e\n HASH=0fa5713e1d8ac70c72501d0a28c2ff46db927c1703b45ce1a618231bfd932235| }"]
 
 "NULL." ->  "(Estructuras de datos
+)" ->  "(Compi
 )" -> "NULL"
  "(Estructuras de datos
+)" ->  "(Compi
 )"[dir=back]
 
 }

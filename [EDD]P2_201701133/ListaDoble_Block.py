@@ -5,10 +5,11 @@ import json
 
 from datetime import datetime
 
-#from ArbolAVL import ArbolAVL_B
+from ArbolAVL import ArbolAVL_B
+
 
 class Block():
-    def __init__(self,index,NombreClase,tiempo,PreHash,hash):
+    def __init__(self,index,NombreClase,tiempo,PreHash,hash,Arbol):
         self.anterior = None
         self.siguiente = None
         self.INDEX=index
@@ -17,6 +18,7 @@ class Block():
         self.PREVIOUSHASH=PreHash
         self.HASH=hash
         self.DATA=""
+        self.ARBOL=Arbol
 
 
 class ListaDoblementeEnlazada_Block():
@@ -44,33 +46,53 @@ class ListaDoblementeEnlazada_Block():
         file.write(inf["value"])
         file.close()
 
-    def Insertar_Final(self, NombreClas,DATA):
+        d=json.dumps(data)
+        cad = "2" + "02-10-19-::14:30:25" + "Estructuras de datos" + d + "fd5f6d5fdfdf232Y232312QW12196255"
+        file = open("Hash.txt", "w")
+        si=self.Encriptador(cad)
+        file.write(si)
+        file.close()
+
+    def Seleccion(self,pos):
+        aux=self.primero
+        TR=aux
+        while(aux is not None):
+            if(aux.INDEX==pos):
+                TR=aux
+            aux=aux.siguiente
+        return  TR
+
+    def Insertar_Final(self, NombreClas,DATO):
         #obtenemos la timestamp
         now = datetime.now()
         Hora = str(now.day) + '-' + str(now.month) + '-' + str(now.year) +'::'+ str(now.hour) + ':' + str(now.minute) + ':' + str(now.second)
 
         #para arbol
-        self.LiberarJSON(DATA)
+        self.LiberarJSON(DATO)
+        NuevoArbol=ArbolAVL_B()
+
         if self.vacio():
             # obtenemos el hash
-            EnviarCadena = str(self.size) + Hora + NombreClas + DATA + "0000"
+            EnviarCadena = str(self.size) + Hora + NombreClas + DATO + "0000"
             ValorHash = self.Encriptador(EnviarCadena)
 
-            nuevaLista = Block(self.size, NombreClas, Hora,"0000",ValorHash)
+            nuevaLista = Block(self.size, NombreClas, Hora,"0000",ValorHash,NuevoArbol)
+            nuevaLista.DATA = DATO
             self.primero =self.ultimo = nuevaLista
         else:
+            self.size += 1
             # obtenemos el hash
-            EnviarCadena = str(self.size) + Hora + NombreClas + DATA+ self.ultimo.HASH
+            EnviarCadena = str(self.size) + Hora + NombreClas + DATO+ self.ultimo.HASH
             ValorHash = self.Encriptador(EnviarCadena)
 
-            nuevaLista = Block(self.size, NombreClas, Hora,self.ultimo.HASH,ValorHash)
-
+            nuevaLista = Block(self.size, NombreClas, Hora,self.ultimo.HASH,ValorHash,NuevoArbol)
+            nuevaLista.DATA=DATO
 
             aux = self.ultimo
             self.ultimo = nuevaLista
             aux.siguiente = nuevaLista
             self.ultimo.anterior=aux
-            self.size += 1
+
 
     def Mostrar(self):
         tem=self.primero
@@ -94,7 +116,7 @@ class ListaDoblementeEnlazada_Block():
 
         while aux is not None:
             CadenaImprimir = CadenaImprimir + " " + '"(' +aux.CLASS+ ')"' +'[label ='+'"{'
-            CadenaImprimir= CadenaImprimir+'|'+ ' CLASS='+aux.CLASS+"\\n TIMESTAMP= "+aux.TIMESTAMP+"\\n PREHASH="+aux.PREVIOUSHASH+"\\n HASH="+aux.HASH+'| }"]'+ '\n'
+            CadenaImprimir= CadenaImprimir+'|'+" INDEX= "+str(aux.INDEX)+ '\\n CLASS='+aux.CLASS+"\\n TIMESTAMP= "+aux.TIMESTAMP+"\\n PREHASH="+aux.PREVIOUSHASH+"\\n HASH="+aux.HASH+'| }"]'+ '\n'
             if aux.siguiente is None:
                 CadenaSig=CadenaSig+" "+ '"(' +aux.CLASS+ ')"'
             else:
