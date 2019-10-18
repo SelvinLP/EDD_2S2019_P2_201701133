@@ -1,11 +1,13 @@
 #Librerias
 import csv
 import threading
+import socket
+import select
+import sys
 #para instalar curses python -m pip install windows-curses
 import curses
 from curses import KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN
-import subprocess
-import os
+
 from ListaDoble_Block import  ListaDoblementeEnlazada_Block
 
 
@@ -46,9 +48,47 @@ def Pintado_Titulo(Vent,cadena):
 
 #Muestra Pantalla
 ListaBlockes=ListaDoblementeEnlazada_Block()
-Pintado_Menu(window)
+#Pintado_Menu(window)
 #Bloque
 NodoBLOCK=None
+#Comprobacion si hay que enviar
+Envio=False
+EnvioJson=""
+#Hilo y Servidor
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+window.addstr(7, 23, 'INGRESE IP DEL SERVIDOR')
+NombreIP= window.getstr(0, 0, 40)
+window.addstr(8, 23, NombreIP)
+window.addstr(9, 23, 'INGRESE PUERTO DEL SERVIDOR')
+Puerto= int(window.getstr(0, 0, 40))
+window.addstr(10, 23, str(Puerto))
+server.connect((NombreIP, Puerto))
+Pintado_Menu(window)
+
+def Conexion():
+    while True:
+        read_sockets = select.select([server], [], [], 1)[0]
+        import msvcrt
+        if msvcrt.kbhit(): read_sockets.append(sys.stdin)
+        for socks in read_sockets:
+            if socks == server:
+                message = socks.recv(2048)
+                Pintado_Titulo(window, " ENTRADA MENSAJE DEL SERVIDOR ")
+                window(7,15,message.decode('utf-8'))
+            else:
+                if(Envio is True):
+                    Pintado_Titulo(window, " ENVIO MENSAJE AL SERVIDOR ")
+                    server.sendall(EnvioJson.encode('utf-8'))
+                    Envio=False
+                    Pausa= int(window.getstr(0, 0, 40))
+
+
+
+
+#inicio de menu
+hilo=threading.Thread(target=Conexion)
+hilo.start()
 while opcion==0:
     #obtenemos posicion del menu
     opcion= window.getch()
@@ -76,7 +116,8 @@ while opcion==0:
                     file = open("CONcsv.txt", "w")
                     file.write(InfoDATA)
                     file.close()
-                ListaBlockes.Insertar_Final(NombreCLASE,InfoDATA)
+                EnvioJson=ListaBlockes.Insertar_Final(NombreCLASE,InfoDATA)
+                Envio=True
 
 
             elif(nombrecorrecto==50):
@@ -204,6 +245,7 @@ while opcion==0:
     elif (opcion==52):
         #opcion 4 Salir
         opcion = 100
+        server.close()
     else:
         opcion=0
 

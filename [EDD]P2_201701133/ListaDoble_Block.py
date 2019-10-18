@@ -46,7 +46,7 @@ class ListaDoblementeEnlazada_Block():
 
 
         d=json.dumps(data)
-        d=d.replace('\\n','').replace(' ','').replace('\\"','"').strip('"').replace("null","None")
+        d=d.replace('\\n','').replace(' ','').replace('\\"','"').strip('"')
         file = open("j.txt", "w")
         file.write(d)
         file.close()
@@ -85,7 +85,7 @@ class ListaDoblementeEnlazada_Block():
 
         #para el hash
         d = json.dumps(DATO)
-        d = d.replace('\\n', '').replace(' ', '').replace('\\"', '"').strip('"').replace("null", "None")
+        d = d.replace('\\n', '').replace(' ', '').replace('\\"', '"').strip('"')
 
         if self.vacio():
             # obtenemos el hash
@@ -121,6 +121,7 @@ class ListaDoblementeEnlazada_Block():
         }
         DocFile=json.dumps(CadenaJSON)
         #documento json es DocFile
+        return DocFile
 
 
 
@@ -135,7 +136,7 @@ class ListaDoblementeEnlazada_Block():
         PreHash = str(Valores["PREVIOUSHASH"])
         Hash = str(Valores["HASH"])
         d = json.dumps(dato)
-        d = d.replace('\\n', '').replace(' ', '').replace('\\"', '"').strip('"').replace("null", "None")
+        d = d.replace('\\n', '').replace(' ', '').replace('\\"', '"').strip('"')
         CadenaEncriptador=index+tiempo+NombreClass+d+PreHash
         ResultadoHash=self.Encriptador(CadenaEncriptador)
         if(Hash==ResultadoHash):
