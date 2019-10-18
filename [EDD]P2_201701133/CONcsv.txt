@@ -13,7 +13,7 @@
             "right":null
         }
     },
-    "rigth":{
+    "right":{
         "value":"201403819-Anne",
         "left":{
             "value":"201403624-Fernando",
@@ -27,4 +27,3 @@
         }
     }
 }
-

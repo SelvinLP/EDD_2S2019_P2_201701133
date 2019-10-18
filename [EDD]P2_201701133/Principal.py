@@ -1,5 +1,6 @@
 #Librerias
-
+import csv
+import threading
 #para instalar curses python -m pip install windows-curses
 import curses
 from curses import KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN
@@ -67,32 +68,15 @@ while opcion==0:
             window.addstr(11, 19, '2.  NO')
             nombrecorrecto=window.getch()
             if(nombrecorrecto==49):
-                #iterador para datos
-                CambioCarga=0
-                #NOTA:Colocar extension
-                f = open(nombre)
-                for linea in f:
-                    Dato=linea.split(",")
-                    if (CambioCarga == 2):
-                        CadenaEnvio+=linea
-
-                    if(Dato[0]=="Class" or Dato[0]=="CLASS" or Dato[0]=="class" ):
-                        CambioCarga = 1
-                    if (Dato[0] == "Data" or Dato[0] == "DATA" or Dato[0] == "data"):
-                        CambioCarga = 2
-                        CadenaEnvio+=Dato[1]
-                    if(CambioCarga==1):
-                        NombreEnvio=Dato[1]
-
-
-
-
-                #insertamos el valor en la lista
-
-                file = open("L.txt", "w")
-                file.write(CadenaEnvio.replace('""','"').replace('""','"').lstrip("{" ).replace('"{','{').replace('}"','}'))
-                file.close()
-                ListaBlockes.Insertar_Final(NombreEnvio,CadenaEnvio.replace('""','"').replace('""','"').lstrip("{" ).replace('"{','{').replace('}"','}'))
+                #probando con libreria csv
+                with open(nombre) as File:
+                    Lectura=csv.reader(File)
+                    ReservadaCLASE,NombreCLASE=next(Lectura)
+                    ReservadaDATA,InfoDATA=next(Lectura)
+                    file = open("CONcsv.txt", "w")
+                    file.write(InfoDATA)
+                    file.close()
+                ListaBlockes.Insertar_Final(NombreCLASE,InfoDATA)
 
 
             elif(nombrecorrecto==50):
@@ -108,6 +92,7 @@ while opcion==0:
     elif(opcion==50):#opcion 2
         CambioSeleccion=0
         Fin_Ciclo=0
+        #Prueba
         while(Fin_Ciclo==0):
             Pintado_Titulo(window, ' SELECT BLOCK ')
             window.addstr(4, 21, "Cambio")
@@ -138,7 +123,6 @@ while opcion==0:
                 Fin_Ciclo=1
 
         # fin de abrir archivo5
-        Espera_Salir(window)
         Pintado_Menu(window)
         opcion = 0
 
@@ -167,8 +151,8 @@ while opcion==0:
                 Pintado_Titulo(window, ' RECORRIDOS ')
                 window.addstr(7, 21, '1. INORDEN ')  # 49
                 window.addstr(8, 21, '2. PREORDEN')  # 50
-                window.addstr(9, 21, '2. POSTORDEN')  # 51
-                window.addstr(12, 21, 'Presione DELETE para salir')
+                window.addstr(9, 21, '3. POSTORDEN')  # 51
+
                 opcionrecorrido=window.getch()
                 if(opcionrecorrido==49):#opcion 1
                     if (NodoBLOCK is None):
@@ -193,7 +177,7 @@ while opcion==0:
                         CadenaPreorden = ""
                         CadenaPreorden = NodoBLOCK.ARBOL.ImprimirPreorden(NodoBLOCK.ARBOL.Raiz, CadenaPreorden)
                         window.addstr(7, 21, CadenaPreorden)
-            if (opcionrecorrido == 51):  # opcion 3
+                if (opcionrecorrido == 51):  # opcion 3
                     if (NodoBLOCK is None):
                         window.addstr(13, 21, 'NO SE HA SELECCIONADO UN BLOCK')
                     else:
@@ -207,7 +191,6 @@ while opcion==0:
 
 
         # fin de abrir archivo5
-        Espera_Salir(window)
         Pintado_Menu(window)
         opcion = 0
 

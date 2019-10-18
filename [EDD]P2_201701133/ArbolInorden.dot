@@ -1,0 +1,7 @@
+digraph ARBOLInorden { 
+rankdir=LR
+node[shape=record,style=filled] 
+"0"[label = "Carnet: 201005874\n Nombre: Estudiante1"]; 
+"0" ->"1" 
+
+}
