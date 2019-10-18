@@ -13,7 +13,7 @@ from ListaDoble_Block import  ListaDoblementeEnlazada_Block
 #Metodos de Curses
 stdscr = curses.initscr()
 TamañoTablero_y=20
-TamañoTablero_x=70
+TamañoTablero_x=80
 window = curses.newwin(TamañoTablero_y,TamañoTablero_x,0,0)
 window.keypad(True)
 curses.noecho()
@@ -31,10 +31,10 @@ def Espera_Salir(Vent):
 
 def Pintado_Menu(Vent):
     Pintado_Titulo(Vent,' MENU PRINCIPAL ')
-    Vent.addstr(7,21, '1. INSERT BLOCK  ')#49
-    Vent.addstr(8,21, '2. SELECT BLOCK')#50
-    Vent.addstr(9,21, '3. REPORTS')#51
-    Vent.addstr(10,21, '4. EXIT')#52
+    Vent.addstr(7,25, '1. INSERT BLOCK  ')#49
+    Vent.addstr(8,25, '2. SELECT BLOCK')#50
+    Vent.addstr(9,25, '3. REPORTS')#51
+    Vent.addstr(10,25, '4. EXIT')#52
 
     Vent.timeout(-1)
 
@@ -60,12 +60,12 @@ while opcion==0:
             NombreEnvio=""
             CadenaEnvio=""
             Pintado_Titulo(window, " INSERT BLOCK ")
-            window.addstr(7, 19, 'INGRESE EL NOMBRE DEL ARCHIVO')
+            window.addstr(7, 23, 'INGRESE EL NOMBRE DEL ARCHIVO')
             nombre = window.getstr(0, 0, 40)
-            window.addstr(8, 23, nombre)
-            window.addstr(9, 19, '¿EL NOMBRE ES CORRECTO?')
-            window.addstr(10, 19, '1.  SI')
-            window.addstr(11, 19, '2.  NO')
+            window.addstr(8, 25, nombre)
+            window.addstr(9, 25, '¿EL NOMBRE ES CORRECTO?')
+            window.addstr(10, 25, '1.  SI')
+            window.addstr(11, 25, '2.  NO')
             nombrecorrecto=window.getch()
             if(nombrecorrecto==49):
                 #probando con libreria csv
@@ -128,18 +128,18 @@ while opcion==0:
 
     elif(opcion==51):#opcion 3
         Pintado_Titulo(window, ' REPORTS ')
-        window.addstr(7, 21, '1. BLOCKCHAIN ')  # 49
-        window.addstr(8, 21, '2. TREE REPORT')  # 50
-        window.addstr(12, 21, 'Presione DELETE para salir')
+        window.addstr(7, 25, '1. BLOCKCHAIN ')  # 49
+        window.addstr(8, 25, '2. TREE REPORT')  # 50
+        window.addstr(12, 25, 'Presione DELETE para salir')
         opcionreporte=window.getch()
         if(opcionreporte==49):
             ListaBlockes.Graficar()
         #opcion de de reporte
         if(opcionreporte==50):
             Pintado_Titulo(window, ' TREE REPORTS ')
-            window.addstr(7, 21, '1. TREE ')  # 49
-            window.addstr(8, 21, '2. RECORRIDOS')  # 50
-            window.addstr(12, 21, 'Presione DELETE para salir')
+            window.addstr(7, 25, '1. TREE ')  # 49
+            window.addstr(8, 25, '2. RECORRIDOS')  # 50
+            window.addstr(12, 25, 'Presione DELETE para salir')
             opcionarbol=window.getch()
             if(opcionarbol==49):#opcion 1
                 if(NodoBLOCK is None):
@@ -149,9 +149,9 @@ while opcion==0:
 
             if(opcionarbol==50):#opcion 2
                 Pintado_Titulo(window, ' RECORRIDOS ')
-                window.addstr(7, 21, '1. INORDEN ')  # 49
-                window.addstr(8, 21, '2. PREORDEN')  # 50
-                window.addstr(9, 21, '3. POSTORDEN')  # 51
+                window.addstr(7, 25, '1. INORDEN ')  # 49
+                window.addstr(8, 25, '2. PREORDEN')  # 50
+                window.addstr(9, 25, '3. POSTORDEN')  # 51
 
                 opcionrecorrido=window.getch()
                 if(opcionrecorrido==49):#opcion 1
@@ -162,9 +162,11 @@ while opcion==0:
                         NodoBLOCK.ARBOL.GraficarInorden()
                         #consola
                         Pintado_Titulo(window, ' RECORRIDOS ')
-                        CadenaInorden=""
-                        CadenaInorden=NodoBLOCK.ARBOL.ImprimirInorden(NodoBLOCK.ARBOL.Raiz,CadenaInorden)
-                        window.addstr(7, 21, CadenaInorden)
+                        NodoBLOCK.ARBOL.CadenaConsola=""
+                        NodoBLOCK.ARBOL.ImprimirInorden(NodoBLOCK.ARBOL.Raiz)
+                        window.addstr(7, 9, "INICIO->"+NodoBLOCK.ARBOL.CadenaConsola)
+                        window.addstr(13, 21, 'Presione DELETE para salir')
+                        Espera_Salir(window)
 
                 if (opcionrecorrido == 50):  # opcion 2
                     if (NodoBLOCK is None):
@@ -174,20 +176,25 @@ while opcion==0:
                         NodoBLOCK.ARBOL.GraficarPreorden()
                         # consola
                         Pintado_Titulo(window, ' RECORRIDOS ')
-                        CadenaPreorden = ""
-                        CadenaPreorden = NodoBLOCK.ARBOL.ImprimirPreorden(NodoBLOCK.ARBOL.Raiz, CadenaPreorden)
-                        window.addstr(7, 21, CadenaPreorden)
+                        NodoBLOCK.ARBOL.CadenaConsola = ""
+                        NodoBLOCK.ARBOL.ImprimirPreorden(NodoBLOCK.ARBOL.Raiz)
+                        window.addstr(7, 9, "INICIO->" + NodoBLOCK.ARBOL.CadenaConsola)
+                        window.addstr(13, 21, 'Presione DELETE para salir')
+                        Espera_Salir(window)
+
                 if (opcionrecorrido == 51):  # opcion 3
                     if (NodoBLOCK is None):
-                        window.addstr(13, 21, 'NO SE HA SELECCIONADO UN BLOCK')
+                        window.addstr(13, 11, 'NO SE HA SELECCIONADO UN BLOCK')
                     else:
                         # imagen
                         NodoBLOCK.ARBOL.GraficarPosorden()
                         # consola
                         Pintado_Titulo(window, ' RECORRIDOS ')
-                        CadenaPosorden = ""
-                        CadenaPosorden = NodoBLOCK.ARBOL.ImprimirPosorden(NodoBLOCK.ARBOL.Raiz, CadenaPosorden)
-                        window.addstr(7, 21, CadenaPosorden)
+                        NodoBLOCK.ARBOL.CadenaConsola = ""
+                        NodoBLOCK.ARBOL.ImprimirPosorden(NodoBLOCK.ARBOL.Raiz)
+                        window.addstr(7, 9, "INICIO->" + NodoBLOCK.ARBOL.CadenaConsola)
+                        window.addstr(13, 21, 'Presione DELETE para salir')
+                        Espera_Salir(window)
 
 
         # fin de abrir archivo5

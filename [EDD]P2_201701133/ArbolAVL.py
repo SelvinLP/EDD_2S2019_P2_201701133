@@ -27,6 +27,7 @@ class ArbolAVL_B():
         self.Raiz = None
         self.size = 0
         self.AlturaMax=0
+        self.CadenaConsola=""
 
     #ROTACIONES
     #Rotacion Izquierda
@@ -245,43 +246,24 @@ class ArbolAVL_B():
             self.CadenaImprimir+="\""+ str(self.size) +"\" ->"+"\""+ str(self.size+1) +"\" \n"
             self.size = self.size + 1
 
-    def ImprimirInorden(self,NodoRaiz,cadena):
+    def ImprimirInorden(self,NodoRaiz):
         if(NodoRaiz is not None):
-            self.DatosInorden(NodoRaiz.Izquierda,cadena)
-            cadena+=" -> "+str(NodoRaiz.Carnet)+"-"+str(NodoRaiz.Nombre)
-            self.DatosInorden(NodoRaiz.Derecha,cadena)
-        return cadena
+            self.ImprimirInorden(NodoRaiz.Izquierda)
+            self.CadenaConsola += " -> " + str(NodoRaiz.Carnet) + "-" + str(NodoRaiz.Nombre)
+            self.ImprimirInorden(NodoRaiz.Derecha)
 
-    def ImprimirPreorden(self,NodoRaiz,cadena):
+
+    def ImprimirPreorden(self,NodoRaiz):
         if(NodoRaiz is not None):
-            cadena += " -> " + str(NodoRaiz.Carnet) + "-" + str(NodoRaiz.Nombre)
-            self.DatosInorden(NodoRaiz.Izquierda,cadena)
-            self.DatosInorden(NodoRaiz.Derecha,cadena)
-        return cadena
+            self.CadenaConsola += " -> " + str(NodoRaiz.Carnet) + "-" + str(NodoRaiz.Nombre)
+            self.ImprimirPreorden(NodoRaiz.Izquierda)
+            self.ImprimirPreorden(NodoRaiz.Derecha)
 
-    def ImprimirPosorden(self,NodoRaiz,cadena):
+    def ImprimirPosorden(self,NodoRaiz):
         if(NodoRaiz is not None):
-            self.DatosInorden(NodoRaiz.Izquierda,cadena)
-            self.DatosInorden(NodoRaiz.Derecha,cadena)
-            cadena += " -> " + str(NodoRaiz.Carnet) + "-" + str(NodoRaiz.Nombre)
-        return cadena
+            self.ImprimirPosorden(NodoRaiz.Izquierda)
+            self.ImprimirPosorden(NodoRaiz.Derecha)
+            self.CadenaConsola += " -> " + str(NodoRaiz.Carnet) + "-" + str(NodoRaiz.Nombre)
 
 
-#tree = ArbolAVL_B()
-#tree.InsertarArbol(10,"a")
-#tree.InsertarArbol(6,"b")
-#tree.InsertarArbol(8,"c")
-#tree.InsertarArbol(15,"d")
-#tree.InsertarArbol(7,"e")
-#tree.InsertarArbol(1,"f")
-#tree.InsertarArbol(9,"g")
-#tree.InsertarArbol(11,"h")
-#tree.InsertarArbol(3,"i")
-#tree.InsertarArbol(17,"j")
-#tree.InsertarArbol(12,"k")
-#tree.InsertarArbol(13,"m")
 
-#tree.GraficarArbol()
-#tree.GraficarInorden()
-#tree.GraficarPreorden()
-#tree.GraficarPosorden()

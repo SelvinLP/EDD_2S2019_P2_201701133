@@ -1,0 +1,19 @@
+digraph ARBOLPreorden { 
+rankdir=LR
+node[shape=record,style=filled] 
+"0"[label = "Carnet: 201403525\n Nombre: Nery"]; 
+"0" ->"1" 
+"1"[label = "Carnet: 201212963\n Nombre: Andres"]; 
+"1" ->"2" 
+"2"[label = "Carnet: 201005874\n Nombre: Estudiante1"]; 
+"2" ->"3" 
+"3"[label = "Carnet: 201313526\n Nombre: Alan"]; 
+"3" ->"4" 
+"4"[label = "Carnet: 201403819\n Nombre: Anne"]; 
+"4" ->"5" 
+"5"[label = "Carnet: 201403624\n Nombre: Fernando"]; 
+"5" ->"6" 
+"6"[label = "Carnet: 201602255\n Nombre: Estudiante2"]; 
+"6" ->"7" 
+
+}

@@ -4,9 +4,10 @@ size="9,9"
 node[shape=record,style=filled] 
 "NULL" [shape=box] 
 "NULL." [shape=box] 
- "(Compi)"[label ="{| INDEX= 0\n CLASS=Compi\n TIMESTAMP= 17-10-2019::18:27:3\n PREHASH=0000\n HASH=8a16215a71126511d2ebdce6baffca0a5feac47279de470df5c0e81595d7c4a3| }"]
+ "(Compi)"[label ="{| INDEX= 0\n CLASS=Compi\n TIMESTAMP= 17-10-2019-::23:50:52\n PREHASH=0000\n HASH=075d4b9092780d9a67a547e5a9a4c9ef8832a703640b125d1ba324f8f160b2bf| }"]
+ "(Estructuras de datos)"[label ="{| INDEX= 1\n CLASS=Estructuras de datos\n TIMESTAMP= 17-10-2019-::23:55:20\n PREHASH=075d4b9092780d9a67a547e5a9a4c9ef8832a703640b125d1ba324f8f160b2bf\n HASH=ec9c926b076afc770ef54add4ac095c944efd2eac21d7ea166f301a075f77eff| }"]
 
-"NULL." ->  "(Compi)" -> "NULL"
- "(Compi)"[dir=back]
+"NULL." ->  "(Compi)" ->  "(Estructuras de datos)" -> "NULL"
+ "(Compi)" ->  "(Estructuras de datos)"[dir=back]
 
 }
