@@ -4,85 +4,93 @@ import threading
 import socket
 import select
 import sys
+import os
+import time
 #para instalar curses python -m pip install windows-curses
-import curses
-from curses import KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN
 
 from ListaDoble_Block import  ListaDoblementeEnlazada_Block
 
 
 
-#Metodos de Curses
-stdscr = curses.initscr()
-TamañoTablero_y=20
-TamañoTablero_x=80
-window = curses.newwin(TamañoTablero_y,TamañoTablero_x,0,0)
-window.keypad(True)
-curses.noecho()
-curses.curs_set(0)
-window.nodelay(True)
-
-
 #variables del menu
 opcion =0
 
-def Espera_Salir(Vent):
-    key = Vent.getch()
-    while key!=8:#posicion para retroceder DELETE
-        key = Vent.getch()
 
-def Pintado_Menu(Vent):
-    Pintado_Titulo(Vent,' MENU PRINCIPAL ')
-    Vent.addstr(7,25, '1. INSERT BLOCK  ')#49
-    Vent.addstr(8,25, '2. SELECT BLOCK')#50
-    Vent.addstr(9,25, '3. REPORTS')#51
-    Vent.addstr(10,25, '4. EXIT')#52
+def Pintado_Menu():
+    os.system("cls")
+    print("                 MENU PRINCIPAL")
+    print("")
+    print('                 1. INSERT BLOCK  ')#49
+    print('                 2. SELECT BLOCK  ')  # 49
+    print('                 3. REPORTS  ')  # 49
+    print('                 4. EXIT  ')  # 49
 
-    Vent.timeout(-1)
 
-def Pintado_Titulo(Vent,cadena):
-    Vent.clear()
-    Vent.border(0)
-    posicion_x = round((60-len(cadena))/2)
-    Vent.addstr(0,posicion_x,cadena)
-
-#Muestra Pantalla
+#Creacion de la lista
 ListaBlockes=ListaDoblementeEnlazada_Block()
-#Pintado_Menu(window)
+
 #Bloque
 NodoBLOCK=None
 #Comprobacion si hay que enviar
-Envio=False
+Envio=0
+Cadenatruefalse="true"
+
 EnvioJson=""
 #Hilo y Servidor
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-window.addstr(7, 23, 'INGRESE IP DEL SERVIDOR')
-NombreIP= window.getstr(0, 0, 40)
-window.addstr(8, 23, NombreIP)
-window.addstr(9, 23, 'INGRESE PUERTO DEL SERVIDOR')
-Puerto= int(window.getstr(0, 0, 40))
-window.addstr(10, 23, str(Puerto))
+print("                 INGRESE IP DEL SERVIDOR")
+NombreIP=input()
+print("")
+print("                 INGRESE PUERTO DEL SERVIDOR")
+Puerto=int(input())
 server.connect((NombreIP, Puerto))
-Pintado_Menu(window)
+Pintado_Menu()
+
+
+
+def LeerNOTOCAR():
+    f = open('NOTOCAR.txt', 'r')
+    mensaje = f.read()
+    f.close()
+    global Cadenatruefalse
+    Cadenatruefalse=ListaBlockes.VerificadorJSON(mensaje)
+
+def InsertarNOTOCAR():
+    f = open('NOTOCAR.txt', 'r')
+    mensaje = f.read()
+    f.close()
+    ListaBlockes.InsertarDesdeJSON(mensaje)
 
 def Conexion():
     while True:
         read_sockets = select.select([server], [], [], 1)[0]
         import msvcrt
         if msvcrt.kbhit(): read_sockets.append(sys.stdin)
-        for socks in read_sockets:
-            if socks == server:
-                message = socks.recv(2048)
-                Pintado_Titulo(window, " ENTRADA MENSAJE DEL SERVIDOR ")
-                window(7,15,message.decode('utf-8'))
-            else:
-                if(Envio is True):
-                    Pintado_Titulo(window, " ENVIO MENSAJE AL SERVIDOR ")
-                    server.sendall(EnvioJson.encode('utf-8'))
-                    Envio=False
-                    Pausa= int(window.getstr(0, 0, 40))
 
+        if(Envio==1):
+            message = EnvioJson
+            server.sendall(message.encode('utf-8'))
+        #para recibir
+        if(server is not None):
+
+            message = server.recv(2048)
+            if(message.decode('utf-8')=="true" or message.decode('utf-8')=="false"):
+                print("")
+                if(message.decode('utf-8')=="true"):
+                    InsertarNOTOCAR()
+
+            else:
+                if(message.decode('utf-8')=="Welcome to [EDD]Blockchain Project!"):
+
+                    message = server.recv(2048)
+                else:
+                    file = open("NOTOCAR.txt", "w")
+                    file.write(message.decode('utf-8'))
+                    file.close()
+                    LeerNOTOCAR()
+                Ms = Cadenatruefalse
+                server.sendall(Ms.encode('utf-8'))
 
 
 
@@ -90,24 +98,26 @@ def Conexion():
 hilo=threading.Thread(target=Conexion)
 hilo.start()
 while opcion==0:
+
     #obtenemos posicion del menu
-    opcion= window.getch()
-    if (opcion == 49):#metodo insrtar
+    opcion= int(input())
+    if (opcion == 1):#metodo insrtar
         #opcion 1
         nombrecorrecto=50
         while(nombrecorrecto==50):
             #variable para enviar a la lista doble
             NombreEnvio=""
             CadenaEnvio=""
-            Pintado_Titulo(window, " INSERT BLOCK ")
-            window.addstr(7, 23, 'INGRESE EL NOMBRE DEL ARCHIVO')
-            nombre = window.getstr(0, 0, 40)
-            window.addstr(8, 25, nombre)
-            window.addstr(9, 25, '¿EL NOMBRE ES CORRECTO?')
-            window.addstr(10, 25, '1.  SI')
-            window.addstr(11, 25, '2.  NO')
-            nombrecorrecto=window.getch()
-            if(nombrecorrecto==49):
+            os.system("cls")
+            print("                     INSERT BLOCK")
+            print("                     INGRESE EL NOMBRE DEL ARCHIVO")
+            nombre = input()
+            print("                     "+nombre)
+            print("                     ¿EL NOMBRE ES CORRECTO?")
+            print("                     1.  SI")
+            print("                     2.  NO")
+            nombrecorrecto=int(input())
+            if(nombrecorrecto==1):
                 #probando con libreria csv
                 with open(nombre) as File:
                     Lectura=csv.reader(File)
@@ -116,133 +126,139 @@ while opcion==0:
                     file = open("CONcsv.txt", "w")
                     file.write(InfoDATA)
                     file.close()
-                EnvioJson=ListaBlockes.Insertar_Final(NombreCLASE,InfoDATA)
-                Envio=True
+                EnvioJson=ListaBlockes.Insertar_Final(NombreCLASE,InfoDATA,"")
+                #para validacion de enviio
+                Envio=1
+                time.sleep(1)
+                Envio=0
+
+
 
 
             elif(nombrecorrecto==50):
                 #no pasa nada
                 nombrecorrecto = 50
 
-        window.addstr(12, 21, 'Presione DELETE para salir')
-
-        #fin de abrir archivo
-        Espera_Salir(window)
-        Pintado_Menu(window)
+        Pintado_Menu()
         opcion=0
-    elif(opcion==50):#opcion 2
+    elif(opcion==2):#opcion 2
         CambioSeleccion=0
         Fin_Ciclo=0
         #Prueba
         while(Fin_Ciclo==0):
-            Pintado_Titulo(window, ' SELECT BLOCK ')
-            window.addstr(4, 21, "Cambio")
-            window.addstr(4, 17, '->')
-            window.addstr(4, 43, '<-')
+            os.system("cls")
+            print("                     SELECT BLOCK ")
+            print("                   <-  Cambio  ->")
             CadenaNombre=ListaBlockes.Seleccion(CambioSeleccion)
-            window.addstr(5, 19, "INDEX: "+str(CadenaNombre.INDEX))
-            window.addstr(6, 19, "TIMESTAMP: "+str(CadenaNombre.TIMESTAMP))
-            window.addstr(7, 19, "DATA: " +CadenaNombre.DATA[0:60])
-            window.addstr(12, 19, "PREVIOUSHASH: " +CadenaNombre.PREVIOUSHASH[0:30])
-            window.addstr(13, 19, "HASH: " +CadenaNombre.HASH[0:30])
-            window.addstr(15, 19, '¿DESEA SELECCIONAR?')
-            window.addstr(16, 19, '1.  SI')
-            window.addstr(17, 19, 'Presione DELETE para salir')
-            opcionseleccion = window.getch()
-            if(opcionseleccion==KEY_RIGHT):
+            print("                     INDEX: "+str(CadenaNombre.INDEX))
+            print("                     TIMESTAMP: "+str(CadenaNombre.TIMESTAMP))
+            print("                     DATA: "+CadenaNombre.DATA[0:60])
+            print("                     PREVIOUSHASH: "+CadenaNombre.PREVIOUSHASH[0:30])
+            print("                     HASH: "+CadenaNombre.HASH[0:30])
+            print("                     ¿DESEA SELECCIONAR?")
+            print("                     1.  SI")
+            print("                     2.  IZQUIERDA")
+            print("                     3.  DERECHA")
+            print("                     4.  NO")
+            opcionseleccion = int(input())
+            if(opcionseleccion==3):
                 CambioSeleccion+=1
                 if(CambioSeleccion>ListaBlockes.size):
                     CambioSeleccion=ListaBlockes.size
                 if(CambioSeleccion<0):
                     CambioSeleccion=0
-            elif (opcionseleccion == KEY_LEFT):
+            elif (opcionseleccion == 2):
                 CambioSeleccion -= 1
-            elif(opcionseleccion==49):
+            elif(opcionseleccion==1):
                 NodoBLOCK=ListaBlockes.Seleccion(CambioSeleccion)
                 Fin_Ciclo=1
-            elif(opcionseleccion==8):
+            elif(opcionseleccion==4):
                 Fin_Ciclo=1
 
         # fin de abrir archivo5
-        Pintado_Menu(window)
+        Pintado_Menu()
         opcion = 0
 
-    elif(opcion==51):#opcion 3
-        Pintado_Titulo(window, ' REPORTS ')
-        window.addstr(7, 25, '1. BLOCKCHAIN ')  # 49
-        window.addstr(8, 25, '2. TREE REPORT')  # 50
-        window.addstr(12, 25, 'Presione DELETE para salir')
-        opcionreporte=window.getch()
-        if(opcionreporte==49):
+    elif(opcion==3):#opcion 3
+        os.system("cls")
+        print("                     REPORTS")
+        print("                     1. BLOCKCHAIN")
+        print("                     2. TREE REPORT")
+        opcionreporte=int(input())
+        if(opcionreporte==1):
             ListaBlockes.Graficar()
         #opcion de de reporte
-        if(opcionreporte==50):
-            Pintado_Titulo(window, ' TREE REPORTS ')
-            window.addstr(7, 25, '1. TREE ')  # 49
-            window.addstr(8, 25, '2. RECORRIDOS')  # 50
-            window.addstr(12, 25, 'Presione DELETE para salir')
-            opcionarbol=window.getch()
-            if(opcionarbol==49):#opcion 1
+        if(opcionreporte==2):
+            os.system("cls")
+            print("                     TREE REPORTS")
+            print("                     1. TREE")
+            print("                     2. RECORRIDOS")
+            opcionarbol=int(input())
+            if(opcionarbol==1):#opcion 1
                 if(NodoBLOCK is None):
-                    window.addstr(13, 21, 'NO SE HA SELECCIONADO UN BLOCK')
+                    print("                     NO SE HA SELECCIONADO UN BLOCK")
                 else:
                     NodoBLOCK.ARBOL.GraficarArbol()
 
-            if(opcionarbol==50):#opcion 2
-                Pintado_Titulo(window, ' RECORRIDOS ')
-                window.addstr(7, 25, '1. INORDEN ')  # 49
-                window.addstr(8, 25, '2. PREORDEN')  # 50
-                window.addstr(9, 25, '3. POSTORDEN')  # 51
+            if(opcionarbol==2):#opcion 2
+                os.system("cls")
+                print("                     RECORRIDOS")
+                print("                     1. INORDEN")
+                print("                     2. PREORDEN")
+                print("                     3. POSTORDEN")
 
-                opcionrecorrido=window.getch()
-                if(opcionrecorrido==49):#opcion 1
+                opcionrecorrido=int(input())
+                if(opcionrecorrido==1):#opcion 1
                     if (NodoBLOCK is None):
-                        window.addstr(13, 21, 'NO SE HA SELECCIONADO UN BLOCK')
+                        print("                     NO SE HA SELECCIONADO UN BLOCK")
                     else:
                         #imagen
                         NodoBLOCK.ARBOL.GraficarInorden()
                         #consola
-                        Pintado_Titulo(window, ' RECORRIDOS ')
+                        print("                     RECORRIDO INORDEN")
                         NodoBLOCK.ARBOL.CadenaConsola=""
                         NodoBLOCK.ARBOL.ImprimirInorden(NodoBLOCK.ARBOL.Raiz)
-                        window.addstr(7, 9, "INICIO->"+NodoBLOCK.ARBOL.CadenaConsola)
-                        window.addstr(13, 21, 'Presione DELETE para salir')
-                        Espera_Salir(window)
+                        print("")
+                        print("                INICIO->"+NodoBLOCK.ARBOL.CadenaConsola)
+                        print("                Ingrese Salir para salir")
+                        pausa=input()
 
-                if (opcionrecorrido == 50):  # opcion 2
+                if (opcionrecorrido == 2):  # opcion 2
                     if (NodoBLOCK is None):
-                        window.addstr(13, 21, 'NO SE HA SELECCIONADO UN BLOCK')
+                        print("                     NO SE HA SELECCIONADO UN BLOCK")
                     else:
                         # imagen
                         NodoBLOCK.ARBOL.GraficarPreorden()
                         # consola
-                        Pintado_Titulo(window, ' RECORRIDOS ')
+                        print("                     RECORRIDO PREORDEN")
                         NodoBLOCK.ARBOL.CadenaConsola = ""
                         NodoBLOCK.ARBOL.ImprimirPreorden(NodoBLOCK.ARBOL.Raiz)
-                        window.addstr(7, 9, "INICIO->" + NodoBLOCK.ARBOL.CadenaConsola)
-                        window.addstr(13, 21, 'Presione DELETE para salir')
-                        Espera_Salir(window)
+                        print("")
+                        print("                INICIO->" + NodoBLOCK.ARBOL.CadenaConsola)
+                        print("                Ingrese Salir para salir")
+                        pausa = input()
 
-                if (opcionrecorrido == 51):  # opcion 3
+                if (opcionrecorrido == 3):  # opcion 3
                     if (NodoBLOCK is None):
-                        window.addstr(13, 11, 'NO SE HA SELECCIONADO UN BLOCK')
+                        print("                     NO SE HA SELECCIONADO UN BLOCK")
                     else:
                         # imagen
                         NodoBLOCK.ARBOL.GraficarPosorden()
                         # consola
-                        Pintado_Titulo(window, ' RECORRIDOS ')
+                        print("                     RECORRIDO POSTORDEN")
                         NodoBLOCK.ARBOL.CadenaConsola = ""
                         NodoBLOCK.ARBOL.ImprimirPosorden(NodoBLOCK.ARBOL.Raiz)
-                        window.addstr(7, 9, "INICIO->" + NodoBLOCK.ARBOL.CadenaConsola)
-                        window.addstr(13, 21, 'Presione DELETE para salir')
-                        Espera_Salir(window)
+                        print("")
+                        print("                INICIO->" + NodoBLOCK.ARBOL.CadenaConsola)
+                        print("                Ingrese Salir para salir")
+                        pausa = input()
 
 
         # fin de abrir archivo5
-        Pintado_Menu(window)
+        Pintado_Menu()
         opcion = 0
 
-    elif (opcion==52):
+    elif (opcion==4):
         #opcion 4 Salir
         opcion = 100
         server.close()
@@ -250,4 +266,4 @@ while opcion==0:
         opcion=0
 
 
-curses.endwin() #Cierra ventanas
+#Cierra ventanas

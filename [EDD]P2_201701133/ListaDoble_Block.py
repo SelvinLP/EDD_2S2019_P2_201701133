@@ -74,11 +74,13 @@ class ListaDoblementeEnlazada_Block():
             aux=aux.siguiente
         return  TR
 
-    def Insertar_Final(self, NombreClas,DATO):
+    def Insertar_Final(self, NombreClas,DATO,tiempo):
         #obtenemos la timestamp
-        now = datetime.now()
-        Hora = str(now.day) + '-' + str(now.month) + '-' + str(now.year) +'-::'+ str(now.hour) + ':' + str(now.minute) + ':' + str(now.second)
-
+        if(tiempo==""):
+            now = datetime.now()
+            Hora = str(now.day) + '-' + str(now.month) + '-' + str(now.year) + '-::' + str(now.hour) + ':' + str(now.minute) + ':' + str(now.second)
+        else:
+            Hora=tiempo
         #para arbol
         NuevoArbol=ArbolAVL_B()
         self.LiberarJSON(DATO,NuevoArbol)
@@ -121,6 +123,9 @@ class ListaDoblementeEnlazada_Block():
         }
         DocFile=json.dumps(CadenaJSON)
         #documento json es DocFile
+        file = open("NOTOCAR.txt", "w")
+        file.write(str(DocFile))
+        file.close()
         return DocFile
 
 
@@ -150,6 +155,13 @@ class ListaDoblementeEnlazada_Block():
         return retorno
 
 
+    def InsertarDesdeJSON(self,JSON):
+        Valores = json.loads(JSON)
+        tiempo = str(Valores["TIMESTAMP"])
+        NombreClass = str(Valores["CLASS"])
+        dato = str(Valores["DATA"])
+        self.Insertar_Final(NombreClass,dato,tiempo)
+        # fin prueba
 
     def Graficar(self):
         CadenaSig=""
@@ -165,12 +177,12 @@ class ListaDoblementeEnlazada_Block():
         #ciclo para los enlaces siguientes
 
         while aux is not None:
-            CadenaImprimir = CadenaImprimir + " " + '"(' +aux.CLASS+ ')"' +'[label ='+'"{'
+            CadenaImprimir = CadenaImprimir + " " + '"(' +aux.CLASS+str(aux.INDEX)+ ')"' +'[label ='+'"{'
             CadenaImprimir= CadenaImprimir+'|'+" INDEX= "+str(aux.INDEX)+ '\\n CLASS='+aux.CLASS+"\\n TIMESTAMP= "+aux.TIMESTAMP+"\\n PREHASH="+aux.PREVIOUSHASH+"\\n HASH="+aux.HASH+'| }"]'+ '\n'
             if aux.siguiente is None:
-                CadenaSig=CadenaSig+" "+ '"(' +aux.CLASS+ ')"'
+                CadenaSig=CadenaSig+" "+ '"(' +aux.CLASS+str(aux.INDEX)+ ')"'
             else:
-                CadenaSig=CadenaSig+" "+ '"(' +aux.CLASS+ ')"' +" -> "
+                CadenaSig=CadenaSig+" "+ '"(' +aux.CLASS+str(aux.INDEX)+ ')"' +" -> "
 
             aux = aux.siguiente
 
