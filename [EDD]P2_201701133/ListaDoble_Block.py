@@ -35,57 +35,44 @@ class ListaDoblementeEnlazada_Block():
     def Tamaño(self):
         return self.size
 
-    def  Encriptador(self,cadena):
-        Confidencial= \
+
+    def Encriptador(self, cadena):
+        Confidencial = \
             hashlib.sha256(cadena.encode()).hexdigest()
         return Confidencial
 
-    def LiberarJSON(self,data,NuevoArbol):
-        inf=json.loads(data)
-        self.LiberarJSONCICLODATOS(inf,NuevoArbol)
+    def LiberarJSON(self, data, NuevoArbol):
+        inf = json.loads(data)
+        self.LiberarJSONCICLODATOS(inf, NuevoArbol)
 
 
-        d=json.dumps(data)
-        d=d.replace('\\n','').replace(' ','').replace('\\"','"').strip('"')
-        file = open("j.txt", "w")
-        file.write(d)
-        file.close()
-        cad = "2" + "02-10-19-::14:30:25" + "Estructuras de datos" + d + "fd5f6d5fdfdf232Y232312QW12196255"
-        file = open("Hash.txt", "w")
-        si=self.Encriptador(cad)
-        file.write(si)
-        file.close()
-
-    def LiberarJSONCICLODATOS(self,CambioR,NuevoArbol):
-        if (CambioR["left"] is not  None):
+    def LiberarJSONCICLODATOS(self, CambioR, NuevoArbol):
+        if (CambioR["left"] is not None):
             self.LiberarJSONCICLODATOS(CambioR["left"], NuevoArbol)
         Dato = CambioR["value"].split("-")
         NuevoArbol.InsertarArbol(Dato[0], Dato[1])
-        if (CambioR["right"] is not  None):
+        if (CambioR["right"] is not None):
             self.LiberarJSONCICLODATOS(CambioR["right"], NuevoArbol)
 
+    def Seleccion(self, pos):
+        aux = self.primero
+        TR = aux
+        while (aux is not None):
+            if (aux.INDEX == pos):
+                TR = aux
+            aux = aux.siguiente
+        return TR
 
-    def Seleccion(self,pos):
-        aux=self.primero
-        TR=aux
-        while(aux is not None):
-            if(aux.INDEX==pos):
-                TR=aux
-            aux=aux.siguiente
-        return  TR
+    def Insertar_Final(self, NombreClas, DATO):
+        # obtenemos la timestamp
+        now = datetime.now()
+        Hora = str(now.day) + '-' + str(now.month) + '-' + str(now.year) + '-::' + str(now.hour) + ':' + str(now.minute) + ':' + str(now.second)
 
-    def Insertar_Final(self, NombreClas,DATO,tiempo):
-        #obtenemos la timestamp
-        if(tiempo==""):
-            now = datetime.now()
-            Hora = str(now.day) + '-' + str(now.month) + '-' + str(now.year) + '-::' + str(now.hour) + ':' + str(now.minute) + ':' + str(now.second)
-        else:
-            Hora=tiempo
-        #para arbol
-        NuevoArbol=ArbolAVL_B()
-        self.LiberarJSON(DATO,NuevoArbol)
+        # para arbol
+        NuevoArbol = ArbolAVL_B()
+        self.LiberarJSON(DATO, NuevoArbol)
 
-        #para el hash
+        # para el hash
         d = json.dumps(DATO)
         d = d.replace('\\n', '').replace(' ', '').replace('\\"', '"').strip('"')
 
@@ -94,47 +81,40 @@ class ListaDoblementeEnlazada_Block():
             EnviarCadena = str(self.size) + Hora + NombreClas + d + "0000"
             ValorHash = self.Encriptador(EnviarCadena)
 
-            nuevaLista = Block(self.size, NombreClas, Hora,"0000",ValorHash,NuevoArbol)
+            nuevaLista = Block(self.size, NombreClas, Hora, "0000", ValorHash, NuevoArbol)
             nuevaLista.DATA = DATO
-            self.primero =self.ultimo = nuevaLista
+            self.primero = self.ultimo = nuevaLista
         else:
             self.size += 1
             # obtenemos el hash
-            EnviarCadena = str(self.size) + Hora + NombreClas + d+ self.ultimo.HASH
+            EnviarCadena = str(self.size) + Hora + NombreClas + d + self.ultimo.HASH
             ValorHash = self.Encriptador(EnviarCadena)
 
-            nuevaLista = Block(self.size, NombreClas, Hora,self.ultimo.HASH,ValorHash,NuevoArbol)
-            nuevaLista.DATA=DATO
+            nuevaLista = Block(self.size, NombreClas, Hora, self.ultimo.HASH, ValorHash, NuevoArbol)
+            nuevaLista.DATA = DATO
 
             aux = self.ultimo
             self.ultimo = nuevaLista
             aux.siguiente = nuevaLista
-            self.ultimo.anterior=aux
+            self.ultimo.anterior = aux
 
-        #fin de Agregar a mi lista
-        #creamos la respuesta y envio del archivo .json
-        CadenaJSON={
+        # fin de Agregar a mi lista
+        # creamos la respuesta y envio del archivo .json
+        CadenaJSON = {
             "INDEX": nuevaLista.INDEX,
             "TIMESTAMP": nuevaLista.TIMESTAMP,
-            "CLASS":nuevaLista.CLASS,
-            "DATA":nuevaLista.DATA,
-            "PREVIOUSHASH":nuevaLista.PREVIOUSHASH,
-            "HASH":nuevaLista.HASH
+            "CLASS": nuevaLista.CLASS,
+            "DATA": nuevaLista.DATA,
+            "PREVIOUSHASH": nuevaLista.PREVIOUSHASH,
+            "HASH": nuevaLista.HASH
         }
-        DocFile=json.dumps(CadenaJSON)
-        #documento json es DocFile
-        file = open("NOTOCAR.txt", "w")
-        file.write(str(DocFile))
-        file.close()
+        DocFile = json.dumps(CadenaJSON)
+        # documento json es DocFile
         return DocFile
 
-
-
-
-
-    def VerificadorJSON(self,JSON):
-        Valores=json.loads(JSON)
-        index=str(Valores["INDEX"])
+    def VerificadorJSON(self, JSON):
+        Valores = json.loads(JSON)
+        index = str(Valores["INDEX"])
         tiempo = str(Valores["TIMESTAMP"])
         NombreClass = str(Valores["CLASS"])
         dato = str(Valores["DATA"])
@@ -142,25 +122,24 @@ class ListaDoblementeEnlazada_Block():
         Hash = str(Valores["HASH"])
         d = json.dumps(dato)
         d = d.replace('\\n', '').replace(' ', '').replace('\\"', '"').strip('"')
-        CadenaEncriptador=index+tiempo+NombreClass+d+PreHash
-        ResultadoHash=self.Encriptador(CadenaEncriptador)
-        if(Hash==ResultadoHash):
-            retorno="true"
+        CadenaEncriptador = index + tiempo + NombreClass + d + PreHash
+        ResultadoHash = self.Encriptador(CadenaEncriptador)
+        if (Hash == ResultadoHash):
+            retorno = "true"
         else:
-            retorno="false"
+            retorno = "false"
         file = open("Verificador.txt", "w")
         file.write(retorno)
         file.close()
-        #fin prueba
+        # fin prueba
         return retorno
 
-
-    def InsertarDesdeJSON(self,JSON):
+    def InsertarDesdeJSON(self, JSON):
         Valores = json.loads(JSON)
         tiempo = str(Valores["TIMESTAMP"])
         NombreClass = str(Valores["CLASS"])
         dato = str(Valores["DATA"])
-        self.Insertar_Final(NombreClass,dato,tiempo)
+        self.Insertar_Final(NombreClass, dato)
         # fin prueba
 
     def Graficar(self):
