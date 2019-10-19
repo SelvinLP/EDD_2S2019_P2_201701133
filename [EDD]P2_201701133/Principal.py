@@ -5,6 +5,7 @@ import socket
 import select
 import sys
 import os
+import os.path
 import time
 #para instalar curses python -m pip install windows-curses
 
@@ -57,21 +58,39 @@ def LeerNOTOCAR():
     #Cadenatruefalse=ListaBlockes.VerificadorJSON(mensaje)
 
 def InsertarNOTOCAR():
-    f = open('NOTOCAR.txt', 'r')
-    mensaje = f.read()
-    f.close()
-    ListaBlockes.InsertarDesdeJSON(mensaje)
+    ruta="NOTOCAR.txt"
+    if os.path.exists(ruta):
+        f = open('NOTOCAR.txt', 'r')
+        mensaje = f.read()
+        f.close()
+        ListaBlockes.InsertarDesdeJSON(mensaje)
+
 
 def Conexion():
     while True:
         read_sockets = select.select([server], [], [], 1)[0]
         import msvcrt
         if msvcrt.kbhit(): read_sockets.append(sys.stdin)
+        # para recibir
+        if (server is not None):
 
+            message = server.recv(2048)
+            if (message.decode('utf-8') == "true" or message.decode('utf-8') == "false"):
+                print("")
+                if (message.decode('utf-8') == "true"):
+                    InsertarNOTOCAR()
 
+            else:
+                if (message.decode('utf-8') == "Welcome to [EDD]Blockchain Project!"):
 
-
-
+                    message = server.recv(2048)
+                else:
+                    file = open("NOTOCAR.txt", "w")
+                    file.write(message.decode('utf-8'))
+                    file.close()
+                    LeerNOTOCAR()
+                Ms = Cadenatruefalse
+                server.sendall(Ms.encode('utf-8'))
 
 
 #inicio de menu
@@ -106,7 +125,7 @@ while opcion==0:
                     file = open("CONcsv.txt", "w")
                     file.write(InfoDATA)
                     file.close()
-                EnvioJson=ListaBlockes.Insertar_Final(NombreCLASE,InfoDATA)
+                EnvioJson=ListaBlockes.Insertar_Final(NombreCLASE,InfoDATA,"")
                 #para validacion de enviio
                 message = EnvioJson
                 server.sendall(message.encode('utf-8'))

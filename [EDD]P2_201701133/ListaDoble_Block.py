@@ -63,10 +63,13 @@ class ListaDoblementeEnlazada_Block():
             aux = aux.siguiente
         return TR
 
-    def Insertar_Final(self, NombreClas, DATO):
+    def Insertar_Final(self, NombreClas, DATO,tiempo):
         # obtenemos la timestamp
-        now = datetime.now()
-        Hora = str(now.day) + '-' + str(now.month) + '-' + str(now.year) + '-::' + str(now.hour) + ':' + str(now.minute) + ':' + str(now.second)
+        if(tiempo==""):
+            now = datetime.now()
+            Hora = str(now.day) + '-' + str(now.month) + '-' + str(now.year) + '-::' + str(now.hour) + ':' + str(now.minute) + ':' + str(now.second)
+        else:
+            Hora=tiempo
 
         # para arbol
         NuevoArbol = ArbolAVL_B()
@@ -139,7 +142,7 @@ class ListaDoblementeEnlazada_Block():
         tiempo = str(Valores["TIMESTAMP"])
         NombreClass = str(Valores["CLASS"])
         dato = str(Valores["DATA"])
-        self.Insertar_Final(NombreClass, dato)
+        self.Insertar_Final(NombreClass, dato,tiempo)
         # fin prueba
 
     def Graficar(self):
