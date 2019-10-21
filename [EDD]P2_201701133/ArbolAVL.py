@@ -140,6 +140,8 @@ class ArbolAVL_B():
                 elif (raiz.Equilibrio == -1):
                     raiz.Equilibrio = 0
                     ComprobacionRT.setLogical(False)
+        elif(carnet==raiz.Carnet):
+            raiz.Carnet=carnet
         return raiz
 
 

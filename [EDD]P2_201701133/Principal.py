@@ -34,7 +34,7 @@ ListaBlockes=ListaDoblementeEnlazada_Block()
 NodoBLOCK=None
 #Comprobacion si hay que enviar
 Envio=1
-Cadenatruefalse="true"
+Cadenatruefalse="false"
 
 EnvioJson=""
 #Hilo y Servidor
@@ -54,16 +54,14 @@ def LeerNOTOCAR():
     f = open('NOTOCAR.txt', 'r')
     mensaje = f.read()
     f.close()
-    #global Cadenatruefalse
-    #Cadenatruefalse=ListaBlockes.VerificadorJSON(mensaje)
+    global Cadenatruefalse
+    Cadenatruefalse=ListaBlockes.VerificadorJSON(mensaje)
 
 def InsertarNOTOCAR():
-    ruta="NOTOCAR.txt"
-    if os.path.exists(ruta):
-        f = open('NOTOCAR.txt', 'r')
-        mensaje = f.read()
-        f.close()
-        ListaBlockes.InsertarDesdeJSON(mensaje)
+    f = open('NOTOCAR.txt', 'r')
+    mensaje = f.read()
+    ListaBlockes.InsertarDesdeJSON(mensaje)
+    f.close()
 
 
 def Conexion():
@@ -76,19 +74,15 @@ def Conexion():
 
             message = server.recv(2048)
             if (message.decode('utf-8') == "true" or message.decode('utf-8') == "false"):
-                print("")
+                #print("")
                 if (message.decode('utf-8') == "true"):
                     InsertarNOTOCAR()
 
             else:
-                if (message.decode('utf-8') == "Welcome to [EDD]Blockchain Project!"):
-
-                    message = server.recv(2048)
-                else:
-                    file = open("NOTOCAR.txt", "w")
-                    file.write(message.decode('utf-8'))
-                    file.close()
-                    LeerNOTOCAR()
+                file = open("NOTOCAR.txt", "w")
+                file.write(message.decode('utf-8'))
+                file.close()
+                LeerNOTOCAR()
                 Ms = Cadenatruefalse
                 server.sendall(Ms.encode('utf-8'))
 
@@ -96,6 +90,8 @@ def Conexion():
 #inicio de menu
 hilo=threading.Thread(target=Conexion)
 hilo.start()
+iteradormessage = server.recv(2048)
+paso=iteradormessage.decode('utf-8')
 while opcion==0:
 
     #obtenemos posicion del menu
