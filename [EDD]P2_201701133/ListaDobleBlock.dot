@@ -4,11 +4,10 @@ size="9,9"
 node[shape=record,style=filled] 
 "NULL" [shape=box] 
 "NULL." [shape=box] 
- "(Estructuras de datos0)"[label ="{| INDEX= 0\n CLASS=Estructuras de datos\n TIMESTAMP= 20-10-2019-::21:41:4\n PREHASH=0000\n HASH=0be5a1cb975a46ccccbc3e079f33ea15e7a11c61e91908afc56aae14b372ee10| }"]
- "(Compi1)"[label ="{| INDEX= 1\n CLASS=Compi\n TIMESTAMP= 20-10-2019-::21:2:58\n PREHASH=0be5a1cb975a46ccccbc3e079f33ea15e7a11c61e91908afc56aae14b372ee10\n HASH=b103c710c84ab267b5191764005b87ccb0c0448d1b018acda0930231273e09b3| }"]
- "(Compi2)"[label ="{| INDEX= 2\n CLASS=Compi\n TIMESTAMP= 20-10-2019-::21:2:58\n PREHASH=b103c710c84ab267b5191764005b87ccb0c0448d1b018acda0930231273e09b3\n HASH=c96ebdfa94a595d064f689201f13e8d20c98c270f741b1efcf9bc4a9108223bd| }"]
+ "(EDD0)"[label ="{| INDEX= 0\n CLASS=EDD\n TIMESTAMP= 26-10-2019-::9:36:11\n PREHASH=0000\n HASH=6270e9852ac1d695176df81ab99c2fed8d4120933d7480cb61e2b4c3556d52fb| }"]
+ "(COMPI11)"[label ="{| INDEX= 1\n CLASS=COMPI1\n TIMESTAMP= 26-10-2019-::9:36:22\n PREHASH=6270e9852ac1d695176df81ab99c2fed8d4120933d7480cb61e2b4c3556d52fb\n HASH=ceeb6862de6ff77fdafa9c36860cec9d6dca159a798e3dcee29539f2d1dd386b| }"]
 
-"NULL." ->  "(Estructuras de datos0)" ->  "(Compi1)" ->  "(Compi2)" -> "NULL"
- "(Estructuras de datos0)" ->  "(Compi1)" ->  "(Compi2)"[dir=back]
+"NULL." ->  "(EDD0)" ->  "(COMPI11)" -> "NULL"
+ "(EDD0)" ->  "(COMPI11)"[dir=back]
 
 }

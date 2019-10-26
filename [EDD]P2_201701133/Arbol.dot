@@ -1,0 +1,15 @@
+digraph ARBOL { 
+rankdir=TB
+size="9,9"
+node[shape=record,style=filled] 
+"201500123Juan"[label ="<C0>|<C1>Carnet: 201500123\n Nombre:  Juan\n Altura:  2\n FE:  1|<C2>"]; 
+"201400123Kevin"[label ="<C0>|<C1>Carnet: 201400123\n Nombre:  Kevin\n Altura:  1\n FE:  0|<C2>"]; 
+"201500123Juan":C0->"201400123Kevin"; 
+"201700123Sofia"[label ="<C0>|<C1>Carnet: 201700123\n Nombre:  Sofia\n Altura:  1\n FE:  0|<C2>"]; 
+"201600123Julio"[label ="<C0>|<C1>Carnet: 201600123\n Nombre:  Julio\n Altura:  0\n FE:  0|<C2>"]; 
+"201700123Sofia":C0->"201600123Julio"; 
+"201800123Andres"[label ="<C0>|<C1>Carnet: 201800123\n Nombre:  Andres\n Altura:  0\n FE:  0|<C2>"]; 
+"201700123Sofia":C2->"201800123Andres"; 
+"201500123Juan":C2->"201700123Sofia"; 
+
+}
